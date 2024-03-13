@@ -32,6 +32,9 @@ class User extends Authenticatable
     public function recruiters(){
         return $this->hasMany(Recruiter::class);
      }
+     public function candidates(){
+        return $this->hasMany(Candidate::class);
+     }
 
     /**
      * The attributes that should be hidden for serialization.
