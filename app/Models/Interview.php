@@ -18,4 +18,8 @@ class Interview extends Model
     {
         return $this->belongsToMany(Subject::class);
     }
+    public function candidate_answer()
+    {
+        return $this->hasMany(Candidate_answer::class);
+    }
 }

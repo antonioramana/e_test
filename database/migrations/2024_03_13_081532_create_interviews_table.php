@@ -24,7 +24,7 @@ return new class extends Migration
         });
         Schema::create('interview_subject', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('interview_id');
+            $table->uuid('interview_id');
             $table->unsignedBigInteger('subject_id');
             $table->foreign('interview_id')->references('id')->on('interviews')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
@@ -41,5 +41,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('interviews');
+        Schema::dropIfExists('interview_subject');
     }
 };
