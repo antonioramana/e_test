@@ -5,20 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Interview extends Model
 {
     use HasFactory;
 
-    protected $fillable=['question, point'];
+    protected $fillable=['start_date, end_date, time, isExpired'];
 
-    public function answers()
-    {
-        return $this->hasMany(Answers::class);
+    public function post(){
+        return $this->belongsTo(Post::class);
     }
-
     public function subjects()
     {
         return $this->belongsToMany(Subject::class);
     }
-
 }

@@ -15,4 +15,8 @@ class Subject extends Model
     {
         return $this->belongsToMany(Question::class);
     }
+    public function interviews()
+    {
+        return $this->belongsToMany(Interview::class);
+    }
 }
