@@ -29,6 +29,10 @@ class User extends Authenticatable
         'image'
     ];
 
+    public function recruiters(){
+        return $this->hasMany(Recruiter::class);
+     }
+
     /**
      * The attributes that should be hidden for serialization.
      *
