@@ -1,7 +1,13 @@
 <?php
 
 namespace App\Providers;
+use App\Models\Candidate;
+use App\Models\CandidateAnswer;
+use App\Models\Interview;
+use App\Models\Question;
+use App\Models\Recruiter;
 use App\Policies\CandidatePolicy;
+use App\Policies\CandidateAnswerPolicy;
 use App\Policies\InterviewPolicy;
 use App\Policies\QuestionPolicy;
 use App\Policies\RecruiterPolicy;
@@ -18,7 +24,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Candidate::class => CandidatePolicy::class,
-        Question::class => InterviewPolicy::class,
+        CandidateAnswer::class => CandidateAnswerPolicy::class,
+        Interview::class => InterviewPolicy::class,
         Question::class => QuestionPolicy::class,
         Recruiter::class => RecruiterPolicy::class,
     ];
