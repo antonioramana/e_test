@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RecruiterController;
+use App\Http\Controllers\SubjectController;
 use App\Models\Candidate;
 use App\Models\Department;
 use App\Models\Post;
+use App\Models\Question;
 use App\Models\Recruiter;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -71,6 +74,22 @@ Route::middleware('auth')->prefix('candidates')->group(function () {
     Route::post('/', [CandidateController::class, 'store'])->can('create', Candidate::class)->name('candidates.store');
     Route::put('/{id}', [CandidateController::class, 'update'])->can('create', Candidate::class)->name('candidates.update');
     Route::delete('/{id}', [CandidateController::class, 'destroy'])->can('create', Candidate::class)->name('candidates.destroy');
+});
+
+Route::middleware('auth')->prefix('questions')->group(function () {
+    Route::get('/{id}', [QuestionController::class, 'show'])->can('viewAny', Question::class)->name('questions.show');
+    Route::get('/', [QuestionController::class, 'index'])->can('viewAny', Question::class)->name('questions.index');
+    Route::post('/', [QuestionController::class, 'store'])->can('create', Question::class)->name('questions.store');
+    Route::put('/{id}', [QuestionController::class, 'update'])->can('create', Question::class)->name('questions.update');
+    Route::delete('/{id}', [QuestionController::class, 'destroy'])->can('create', Question::class)->name('questions.destroy');
+});
+
+Route::middleware('auth')->prefix('subjects')->group(function () {
+    Route::get('/{id}', [SubjectController::class, 'show'])->can('viewAny', Question::class)->name('subjects.show');
+    Route::get('/', [SubjectController::class, 'index'])->can('viewAny', Question::class)->name('subjects.index');
+    Route::post('/', [SubjectController::class, 'store'])->can('create', Question::class)->name('subjects.tore');
+    Route::put('/{id}', [SubjectController::class, 'update'])->can('create', Question::class)->name('subjects.update');
+    Route::delete('/{id}', [SubjectController::class, 'destroy'])->can('create', Question::class)->name('subjects.destroy');
 });
 
 require __DIR__.'/auth.php';
