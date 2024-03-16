@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 use App\Policies\CandidatePolicy;
+use App\Policies\InterviewPolicy;
+use App\Policies\QuestionPolicy;
 use App\Policies\RecruiterPolicy;
 
 // use Illuminate\Support\Facades\Gate;
@@ -16,8 +18,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Candidate::class => CandidatePolicy::class,
-        Recruiter::class => RecruiterPolicy::class,
+        Question::class => InterviewPolicy::class,
         Question::class => QuestionPolicy::class,
+        Recruiter::class => RecruiterPolicy::class,
     ];
 
     /**

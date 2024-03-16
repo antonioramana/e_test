@@ -42,7 +42,7 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show($id)
     {
         $department = Department::find($id);
         $department->load('recruiters');

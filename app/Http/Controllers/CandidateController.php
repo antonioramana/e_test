@@ -54,7 +54,7 @@ class CandidateController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Candidate $candidate)
+    public function show($id)
     {
         //
     }

@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\SubjectController;
 use App\Models\Candidate;
 use App\Models\Department;
+use App\Models\Interview;
 use App\Models\Post;
 use App\Models\Question;
 use App\Models\Recruiter;
@@ -92,4 +94,11 @@ Route::middleware('auth')->prefix('subjects')->group(function () {
     Route::delete('/{id}', [SubjectController::class, 'destroy'])->can('create', Question::class)->name('subjects.destroy');
 });
 
+Route::middleware('auth')->prefix('interviews')->group(function () {
+    Route::get('/{id}', [InterviewController::class, 'show'])->can('viewAny', Interview::class)->name('interviews.show');
+    Route::get('/', [InterviewController::class, 'index'])->can('viewAny', Interview::class)->name('interviews.index');
+    Route::post('/', [InterviewController::class, 'store'])->can('create', Interview::class)->name('interviews.tore');
+    Route::put('/{id}', [InterviewController::class, 'update'])->can('create', Interview::class)->name('interviews.update');
+    Route::delete('/{id}', [InterviewController::class, 'destroy'])->can('create', Interview::class)->name('interviews.destroy');
+});
 require __DIR__.'/auth.php';
