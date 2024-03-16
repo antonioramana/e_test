@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\CandidateAnswerController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\SubjectController;
 use App\Models\Candidate;
+use App\Models\CandidateAnswer;
 use App\Models\Department;
 use App\Models\Interview;
 use App\Models\Post;
@@ -100,5 +104,12 @@ Route::middleware('auth')->prefix('interviews')->group(function () {
     Route::post('/', [InterviewController::class, 'store'])->can('create', Interview::class)->name('interviews.tore');
     Route::put('/{id}', [InterviewController::class, 'update'])->can('create', Interview::class)->name('interviews.update');
     Route::delete('/{id}', [InterviewController::class, 'destroy'])->can('create', Interview::class)->name('interviews.destroy');
+});
+
+Route::middleware('auth')->prefix('candidates-responses')->group(function () {
+    Route::get('/{id}', [CandidateAnswerController::class, 'show'])->can('view', CandidateAnswer::class)->name('interviews.show');
+    Route::get('/', [CandidateAnswerController::class, 'index'])->can('viewAny', CandidateAnswer::class)->name('interviews.index');
+    Route::post('/', [CandidateAnswerController::class, 'store'])->can('create', CandidateAnswer::class)->name('interviews.tore');
+    Route::delete('/{id}', [CandidateAnswerController::class, 'destroy'])->can('delete', CandidateAnswer::class)->name('interviews.destroy');
 });
 require __DIR__.'/auth.php';

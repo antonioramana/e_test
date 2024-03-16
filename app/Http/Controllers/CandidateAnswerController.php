@@ -2,64 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Candidate_answer;
 use Illuminate\Http\Request;
+use App\Models\CandidateAnswer;
 
 class CandidateAnswerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche la liste de toutes les réponses des candidats.
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        $candidateAnswers = CandidateAnswer::all();
+
+        return response()->json(['data' => $candidateAnswers]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+ public function show($id)
+        {
+            // Trouvez les réponses du candidat par son ID avec les relations associées
+            $candidateAnswers = CandidateAnswer::with(['answer', 'interview', 'candidate'])->where('candidate_id', $id)->get();
+        
+            return response()->json(['data' => $candidateAnswers]);
+        }
+
+public function store(Request $request)
+        {
+            $request->validate([
+                'candidate_id' => 'required|exists:posts,id',
+                'interview_id' => 'required|exists:interviews,id',
+                'answer_id' => 'required|exists:answers,id',
+            ]);
+
+            $candidateAnswer = new CandidateAnswer();
+
+            $candidateAnswer->save();
+
+            return response()->json(['message' => 'Réponse de candidat créée avec succès !'], 201); 
+        }
+
+    
+ public function destroy($id)
     {
-        //
+        $candidateAnswer = CandidateAnswer::findOrFail($id);
+        $candidateAnswer->delete();
+
+        return response()->json(['message' => 'Réponse de candidat supprimée avec succès !']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Candidate_answer $candidate_answer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Candidate_answer $candidate_answer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Candidate_answer $candidate_answer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Candidate_answer $candidate_answer)
-    {
-        //
-    }
 }
