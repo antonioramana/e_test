@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recruiter;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 
 class RecruiterController extends Controller
 {
@@ -12,7 +14,8 @@ class RecruiterController extends Controller
      */
     public function index()
     {
-        //
+        $recruiters = Recruiter::with('user', 'department')->get();
+        return response()->json($recruiters);
     }
 
     /**
@@ -28,7 +31,23 @@ class RecruiterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = UserController::store($request);
+        if (!$user) {
+            return response()->json(['message' => 'User registration failed'], 400);
+        }
+
+        $request->validate([
+            'department_id' => 'required|exists:departments,id',
+            'job_title' => 'required|max:255',
+        ]);
+        $recruiter = new Recruiter();
+        $recruiter->user_id = $user->id;
+        $recruiter->department_id = $request->input('department_id');
+        $recruiter->job_title = $request->input('job_title');
+        $recruiter->save();
+
+        return response()->json($recruiter, 201);
+       
     }
 
     /**
@@ -50,16 +69,36 @@ class RecruiterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Recruiter $recruiter)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'department_id' => 'required|exists:departments,id',
+            'job_title' => 'required|max:255',
+        ]);
 
+        $recruiter = Recruiter::find($id);
+        if (!$recruiter) {
+            return response()->json(['message' => 'Recruiter not found'], 404);
+        }
+
+        $recruiter->department_id = $request->input('department_id');
+        $recruiter->job_title = $request->input('job_title');
+        $recruiter->save();
+
+        return response()->json($recruiter);
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Recruiter $recruiter)
+    public function destroy($id)
     {
-        //
+        $recruiter = Recruiter::find($id);
+        if (!$recruiter) {
+            return response()->json(['message' => 'Recruiter not found'], 404);
+        }
+
+        $recruiter->delete();
+
+        return response()->json(['message' => 'Recruiter deleted'], 200);
     }
 }

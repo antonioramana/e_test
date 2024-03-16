@@ -12,7 +12,8 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        $departments = Department::with('recruiters')->get();
+        return response()->json($departments);
     }
 
     /**
@@ -28,7 +29,14 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:departments|max:255',
+        ]);
+        $department = new Department();
+        $department->name = $request->input('name');
+        $department->save();
+
+        return response()->json($department, 201);
     }
 
     /**
@@ -36,7 +44,12 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        //
+        $department = Department::find($id);
+        $department->load('recruiters');
+        if (!$department) {
+            return response()->json(['message' => 'Department not found'], 404);
+        }
+        return response()->json($department);
     }
 
     /**
@@ -50,16 +63,34 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:departments|max:255',
+        ]);
+        $department = Department::find($id);
+        if (!$department) {
+            return response()->json(['message' => 'Department not found'], 404);
+        }
+
+        $department->name = $request->input('name');
+        $department->save();
+
+        return response()->json($department);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy($id)
     {
-        //
+        $department = Department::find($id);
+        if (!$department) {
+            return response()->json(['message' => 'Department not found'], 404);
+        }
+
+        $department->delete();
+
+        return response()->json(['message' => 'Department deleted'], 200);
     }
 }

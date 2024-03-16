@@ -12,7 +12,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::with('candidates')->get();
+        return response()->json($posts);
     }
 
     /**
@@ -28,7 +29,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:posts|max:255',
+            'description' => 'required|max:255',
+            'is_available' => 'required|boolean',
+            'nb_allowed' => 'required|numeric',
+        ]);
+        $post = new Post();
+        $post->name = $request->input('name');
+        $post->description = $request->input('description');
+        $post->is_available = $request->input('is_available');
+        $post->nb_allowed = $request->input('nb_allowed');
+        $post->save();
+
+        return response()->json($post, 201);
     }
 
     /**
@@ -36,7 +50,12 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post = Post::find($id);
+        $post->load('candidates');
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+        return response()->json($post);
     }
 
     /**
@@ -50,16 +69,40 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:posts|max:255',
+            'description' => 'required|max:255',
+            'is_available' => 'required|boolean',
+            'nb_allowed' => 'required|numeric',
+        ]);
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $post->name = $request->input('name');
+        $post->description = $request->input('description');
+        $post->is_available = $request->input('is_available');
+        $post->nb_allowed = $request->input('nb_allowed');
+        $post->save();
+
+        return response()->json($post);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $post->delete();
+
+        return response()->json(['message' => 'Post deleted'], 200);
     }
 }
