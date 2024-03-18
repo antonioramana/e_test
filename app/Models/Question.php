@@ -13,12 +13,16 @@ class Question extends Model
 
     public function answers()
     {
-        return $this->hasMany(Answers::class);
+        return $this->hasMany(Answer::class);
     }
 
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class);
+        return $this->belongsToMany(Subject::class, 'question_subjects');
+    }
+    public function questionSubjects()
+    {
+        return $this->belongsToMany(QuestionSubject::class, 'question_subjects');
     }
 
 }

@@ -17,7 +17,8 @@ class QuestionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'question' => $this->faker->sentence,
+            'point' => $this->faker->numberBetween(1,20),
         ];
     }
 }

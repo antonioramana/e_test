@@ -13,10 +13,14 @@ class Subject extends Model
     
     public function questions()
     {
-        return $this->belongsToMany(Question::class);
+        return $this->belongsToMany(Question::class, 'question_subjects');
     }
     public function interviews()
     {
-        return $this->belongsToMany(Interview::class);
+        return $this->hasMany(Interview::class);
+    }
+    public function questionSubjects()
+    {
+        return $this->belongsToMany(QuestionSubject::class, 'question_subjects');
     }
 }

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subject;
+use App\Models\QuestionSubject;
 use App\Models\Question;
+use Illuminate\Support\Arr;
+
 
 class SubjectController extends Controller
 {
@@ -15,12 +18,21 @@ class SubjectController extends Controller
 
         return response()->json(['data' => $subjects]);
     }
-
+//Questions d'un sujet d'un Interview
     public function show($id)
     {
-        $subject = Subject::with('questions')->findOrFail($id);
+        // $subject = Subject::with('questions.answers')->findOrFail($id);
 
-        return response()->json(['data' => $subject]);
+        // return response()->json(['data' => $subject]);
+        $subject = Subject::with('questions.answers')->findOrFail($id);
+
+    // Transformation pour ne retourner que la propriété answer
+        $transformedSubject = $subject->toArray();
+        foreach ($transformedSubject['questions'] as &$question) {
+            $question['answers'] = Arr::pluck($question['answers'], 'answer');
+        }
+
+        return response()->json(['data' => $transformedSubject]);
     }
 
     public function createSubjectWithQuestions(Request $request)

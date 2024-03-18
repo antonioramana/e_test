@@ -9,16 +9,16 @@ class Interview extends Model
 {
     use HasFactory;
 
-    protected $fillable=['start_date, end_date, time, isExpired'];
+    protected $fillable=['start_date','end_date','time','isExpired', 'post_id', 'subject_id'];
 
     public function post(){
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class, 'post_id');
     }
-    public function subjects()
+    public function subject()
     {
-        return $this->belongsToMany(Subject::class);
+        return $this->belongsTo(Subject::class, 'subject_id');
     }
-    public function candidate_answer()
+    public function candidate_answers()
     {
         return $this->hasMany(Candidate_answer::class);
     }

@@ -9,10 +9,10 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $fillable=['answer,is_correct'];
+    protected $fillable=['answer','is_correct','question_id'];
 
     public function question(){
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(Question::class, 'question_id');
     }
     public function candidate_answer()
     {

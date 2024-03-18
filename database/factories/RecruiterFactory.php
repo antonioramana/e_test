@@ -17,7 +17,9 @@ class RecruiterFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'job_title'=>$this->faker->word,
+            'user_id' => $this->faker->randomElement([3,8]),
+            'department_id' => $this->faker->randomElement([1,2]),
         ];
     }
 }

@@ -9,14 +9,14 @@ class Candidate extends Model
 {
     use HasFactory;
 
-    protected $fillable=['status','gender'];
+    protected $fillable=['status','gender','user_id','post_id'];
 
     public function user(){
-       return $this->belongsTo(User::class);
+       return $this->belongsTo(User::class, 'user_id');
     }
 
     public function Post(){
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Post::class, 'post_id');
     }
     public function candidate_answer()
     {

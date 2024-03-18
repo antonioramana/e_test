@@ -12,7 +12,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('candidates')->get();
+        $posts = Post::with('candidates.user')->get();
         return response()->json($posts);
     }
 
