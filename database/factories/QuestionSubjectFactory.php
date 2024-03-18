@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Answer>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Subject>
  */
-class AnswerFactory extends Factory
+class QuestionSubjectFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,7 @@ class AnswerFactory extends Factory
     public function definition(): array
     {
         return [
-            'answer' => $this->faker->word,
-            'is_correct'=>$this->faker->randomElement([true,false]),
+            'subject_id' => $this->faker->randomElement([1,2]),
             'question_id' => $this->faker->randomElement([1,2,3]),
         ];
     }

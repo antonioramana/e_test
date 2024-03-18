@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class RecruiterPolicy
+class CandidatePolicy
 {
     /**
      * Create a new policy instance.

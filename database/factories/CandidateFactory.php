@@ -17,7 +17,10 @@ class CandidateFactory extends Factory
     public function definition(): array
     {
         return [
-            //
-        ];
+            'status'=>$this->faker->randomElement(["pending","admitted","failed"]),
+            'gender'=>$this->faker->randomElement(["feminine","masculine"]),
+            'user_id' => $this->faker->randomElement([1,2,4,6,9]),
+            'post_id' => $this->faker->randomElement([1,2]),
+           ];
     }
 }

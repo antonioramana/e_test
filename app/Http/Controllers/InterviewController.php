@@ -15,7 +15,7 @@ class InterviewController extends Controller
      */
     public function index()
     {
-        $interviews = Interview::with(['subjects,post'])->get();
+        $interviews = Interview::with(['subject.questions.answers','post'])->get();
 
         return response()->json(['data' => $interviews]);
     }
@@ -24,10 +24,24 @@ class InterviewController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show($post_id)
     {
-        $interview = Interview::find($id);
-        $interview->load('subjects,post');
+        $interview = Interview::where('post_id','=',$post_id)->get();
+        $interview->load('subject', 'post');
+        if (!$interview) {
+            return response()->json(['message' => 'Interview not found'], 404);
+        }
+        return response()->json($interview);
+    }
+        /**
+     * Affiche un entretien.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show2($interview_id)
+    {
+        $interview = Interview::where('id','=',$interview_id)->get();
+        $interview->load('subject.questions.answers', 'post');
         if (!$interview) {
             return response()->json(['message' => 'Interview not found'], 404);
         }
