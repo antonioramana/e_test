@@ -12,22 +12,26 @@ class CandidateAnswerController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index($id)
     {
-        $candidateAnswers = CandidateAnswer::all();
+        $candidateAnswers = CandidateAnswer::with(['answer', 'interview', 'candidate'])
+            ->where('interview_id', $id)
+            ->get()
+            ->groupBy('candidate_id'); 
 
         return response()->json(['data' => $candidateAnswers]);
     }
 
- public function show($id)
+    public function show($interview,$candidate)
         {
-            // Trouvez les réponses du candidat par son ID avec les relations associées
-            $candidateAnswers = CandidateAnswer::with(['answer', 'interview', 'candidate'])->where('candidate_id', $id)->get();
-        
+            $candidateAnswers = CandidateAnswer::with(['answer', 'interview', 'candidate'])
+            ->where('candidate_id', $candidate)
+            ->where('interview_id', $interview)
+            ->get();
             return response()->json(['data' => $candidateAnswers]);
         }
 
-public function store(Request $request)
+    public function store(Request $request)
         {
             $request->validate([
                 'candidate_id' => 'required|exists:posts,id',
@@ -43,7 +47,7 @@ public function store(Request $request)
         }
 
     
- public function destroy($id)
+    public function destroy($id)
     {
         $candidateAnswer = CandidateAnswer::findOrFail($id);
         $candidateAnswer->delete();

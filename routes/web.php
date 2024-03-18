@@ -107,8 +107,8 @@ Route::middleware('auth')->prefix('interviews')->group(function () {
 });
 
 Route::middleware('auth')->prefix('candidates-responses')->group(function () {
-    Route::get('/{id}', [CandidateAnswerController::class, 'show'])->can('view', CandidateAnswer::class)->name('interviews.show');
-    Route::get('/', [CandidateAnswerController::class, 'index'])->can('viewAny', CandidateAnswer::class)->name('interviews.index');
+    Route::get('/{interview}/{candidate}', [CandidateAnswerController::class, 'show'])->can('view', CandidateAnswer::class)->name('interviews.show');
+    Route::get('/{id}', [CandidateAnswerController::class, 'index'])->can('viewAny', CandidateAnswer::class)->name('interviews.index');
     Route::post('/', [CandidateAnswerController::class, 'store'])->can('create', CandidateAnswer::class)->name('interviews.tore');
     Route::delete('/{id}', [CandidateAnswerController::class, 'destroy'])->can('delete', CandidateAnswer::class)->name('interviews.destroy');
 });

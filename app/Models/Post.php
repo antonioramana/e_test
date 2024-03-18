@@ -9,7 +9,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable=['name, description, is_available, nb_allowed'];
+    protected $fillable=['name', 'description', 'is_available', 'nb_allowed'];
 
     public function candidates(){
         return $this->hasMany(Candidate::class);

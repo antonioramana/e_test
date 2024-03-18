@@ -9,13 +9,13 @@ class Recruiter extends Model
 {
     use HasFactory;
     
-    protected $fillable=['job_title'];
+    protected $fillable=['job_title', 'user_id', 'department_id'];
 
     public function user(){
-       return $this->belongsTo(User::class);
+       return $this->belongsTo(User::class, 'user_id');
     }
 
     public function department(){
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id');
     }
 }

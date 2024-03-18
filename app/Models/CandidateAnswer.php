@@ -9,17 +9,18 @@ class CandidateAnswer extends Model
 {
     use HasFactory;
 
+    protected $fillable=['candidate_id','answer_id','interview'];
  
     public function candidate(){
-       return $this->belongsTo(Candidate::class);
+       return $this->belongsTo(Candidate::class,'candidate_id');
     }
 
     public function answer(){
-        return $this->belongsTo(Answer::class);
+        return $this->belongsTo(Answer::class, 'answer_id');
     }
 
     public function interview(){
-        return $this->belongsTo(Interview::class);
+        return $this->belongsTo(Interview::class, 'interview_id');
     }
     // public function answers()
     // {

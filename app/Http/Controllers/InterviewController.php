@@ -47,8 +47,7 @@ class InterviewController extends Controller
             'end_date' => 'required|date',
             'time' => 'required|integer',
             'post_id' => 'required|exists:posts,id',
-            'subjects' => 'required|array', 
-            'subjects.*.id' => 'required|exists:subjects,id',
+            'subject_id' => 'required|exists:subjects,id', 
         ]);
        
         $interview = new Interview();
@@ -56,14 +55,10 @@ class InterviewController extends Controller
         $interview->end_date = $request->input('end_date');
         $interview->time = $request->input('time');
         $interview->post_id = $request->input('post_id');
+        $interview->subject_id = $request->input('subject_id');
         $interview->save();
 
-        $subjectsData = $request->input('subjects'); // Tableau de sujets
-        foreach ($subjectsData as $subjectData) {
-            $interview->subjects()->attach($subject->id);
-        }
-
-        return response()->json(['message' => 'Entretien créé avec succès avec les sujets associés !']);
+        return response()->json(['message' => 'Entretien créé avec succès avec un sujet associé !']);
     }
 
 
@@ -74,6 +69,7 @@ class InterviewController extends Controller
             'end_date' => 'required|date',
             'time' => 'required|integer',
             'post_id' => 'required|exists:posts,id',
+            'subject_id' => 'required|exists:subjects,id',
         ]);
 
         $interview = Interview::findOrFail($id);
@@ -81,6 +77,7 @@ class InterviewController extends Controller
         $interview->end_date = $request->input('end_date');
         $interview->time = $request->input('time');
         $interview->post_id = $request->input('post_id');
+        $interview->post_id = $request->input('subject_id');
 
         $interview->save();
 
