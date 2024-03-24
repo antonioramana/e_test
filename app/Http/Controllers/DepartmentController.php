@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DepartmentController extends Controller
 {
@@ -13,7 +14,10 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::with('recruiters')->get();
-        return response()->json($departments);
+
+        return Inertia::render('Department/Index', [
+            'departments' => $departments,
+        ]);
     }
 
     /**
@@ -36,7 +40,8 @@ class DepartmentController extends Controller
         $department->name = $request->input('name');
         $department->save();
 
-        return response()->json($department, 201);
+        redirect(route('departments.index'));
+       // return response()->json($department, 201);
     }
 
     /**

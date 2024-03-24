@@ -9,7 +9,7 @@ class Interview extends Model
 {
     use HasFactory;
 
-    protected $fillable=['start_date','end_date','time','isExpired', 'post_id', 'subject_id'];
+    protected $fillable=['id','name','start_date','end_date','time','isExpired', 'post_id', 'subject_id'];
 
     public function post(){
         return $this->belongsTo(Post::class, 'post_id');
@@ -20,6 +20,10 @@ class Interview extends Model
     }
     public function candidate_answers()
     {
-        return $this->hasMany(Candidate_answer::class);
+        return $this->hasMany(CandidateAnswer::class);
+    }
+    public function candidate_notes()
+    {
+        return $this->hasMany(CandidateNote::class);
     }
 }

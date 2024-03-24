@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Interview;
+use App\Models\Post;
 use App\Models\Subject;
+use Inertia\Inertia;
+use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 
 class InterviewController extends Controller
 {
@@ -15,15 +19,31 @@ class InterviewController extends Controller
      */
     public function index()
     {
+        $posts= Post::all();
+        $subjects= Subject::all();
         $interviews = Interview::with(['subject.questions.answers','post'])->get();
-
-        return response()->json(['data' => $interviews]);
+       // return response()->json(['data' => $interviews]);
+       return Inertia::render('Interview/Index', [
+        'posts' => $posts,
+        'subjects' => $subjects,
+        'interviews' => $interviews,
+    ]);
     }
     /**
      * Affiche un entretien.
      *
      * @return \Illuminate\Http\JsonResponse
      */
+   
+    public function  getPostInterview($post_id)
+    {
+        $interviews = Interview::where('post_id','=',$post_id)->get();
+        if ($interviews->isEmpty()) {
+            return response()->json(['data' => []]);
+        }    
+        $interviews->load('subject', 'post');   
+        return response()->json(['data' => $interviews]);
+    }
     public function show($post_id)
     {
         $interview = Interview::where('post_id','=',$post_id)->get();
@@ -54,17 +74,22 @@ class InterviewController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createInterviewWithSubjects(Request $request)
+    public function store(Request $request)
     {
+        $uuid = Uuid::uuid4()->toString();
+
         $request->validate([
+            'name' => 'required|string|max:50',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'time' => 'required|integer',
+            'end_date' => 'required|date|after:start_date',
+            'time' => 'required|date_format:H:i',
             'post_id' => 'required|exists:posts,id',
-            'subject_id' => 'required|exists:subjects,id', 
+            'subject_id' => 'required|exists:subjects,id',
         ]);
        
         $interview = new Interview();
+        $interview->id = $uuid;
+        $interview->name = $request->input('name');
         $interview->start_date = $request->input('start_date');
         $interview->end_date = $request->input('end_date');
         $interview->time = $request->input('time');
@@ -72,16 +97,17 @@ class InterviewController extends Controller
         $interview->subject_id = $request->input('subject_id');
         $interview->save();
 
-        return response()->json(['message' => 'Entretien créé avec succès avec un sujet associé !']);
+        redirect(route('tests.index'));
     }
 
 
     public function update(Request $request, $id)
     {
         $request->validate([
+            'name' => 'required|string|max:50',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            'time' => 'required|integer',
+            'end_date' => 'required|date|after:start_date',
+            'time' => 'required|date_format:H:i',
             'post_id' => 'required|exists:posts,id',
             'subject_id' => 'required|exists:subjects,id',
         ]);
@@ -107,4 +133,15 @@ class InterviewController extends Controller
         return response()->json(['message' => 'Entretien supprimé avec succès !']);
     }
 
+    public function checkInterviewExpiration($interview_id)
+    {
+        $interview = Interview::findOrFail($interview_id);
+        $currentDateTime = Carbon::now();
+        $isExpired = $currentDateTime->gt($interview->end_date);
+
+        return response()->json(['is_expired' => $isExpired]);
+    }
+
 }
+
+

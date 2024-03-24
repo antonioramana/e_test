@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('interviews', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
+            $table->uuid('uuid');
+            $table->string('name');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->integer('time');
+            $table->time('time');
             $table->boolean('is_expired')->default(false);
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('subject_id');

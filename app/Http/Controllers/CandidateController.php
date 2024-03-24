@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
+use Inertia\Inertia;
 
 class CandidateController extends Controller
 {
@@ -15,7 +16,10 @@ class CandidateController extends Controller
     public function index()
     {
         $candidates = Candidate::with('user', 'post')->get();
-        return response()->json($candidates);
+       // return response()->json($candidates);
+       return Inertia::render('Candidate/Index', [
+        'candidates' => $candidates
+    ]);
     }
 
     /**

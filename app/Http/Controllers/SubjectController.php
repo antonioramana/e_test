@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\QuestionSubject;
 use App\Models\Question;
 use Illuminate\Support\Arr;
+use Inertia\Inertia;
 
 
 class SubjectController extends Controller
@@ -14,42 +15,57 @@ class SubjectController extends Controller
 
     public function index()
     {
-        $subjects = Subject::with('questions')->get();
-
-        return response()->json(['data' => $subjects]);
+        $subjects = Subject::with('questions.answers')->get();
+        $questions = Question::all();
+       // return response()->json(['data' => $subjects]);
+       foreach ($subjects as $subject) {
+           $totalPoints = 0;
+            foreach ($subject->questions as $question) {
+                $totalPoints += $question->point;
+            }
+             $subject->total_points = $totalPoints;
+         }
+        return Inertia::render('Subject/Index', [
+            'subjects' => $subjects,
+            'questions' => $questions,
+        ]);
     }
-//Questions d'un sujet d'un Interview
-    public function show($id)
-    {
-        // $subject = Subject::with('questions.answers')->findOrFail($id);
 
-        // return response()->json(['data' => $subject]);
+    //Questions d'un sujet d'un Interview
+    public function getQuestionsSubject($id)
+    {
         $subject = Subject::with('questions.answers')->findOrFail($id);
 
-    // Transformation pour ne retourner que la propriété answer
         $transformedSubject = $subject->toArray();
+        
         foreach ($transformedSubject['questions'] as &$question) {
-            $question['answers'] = Arr::pluck($question['answers'], 'answer');
+            $question['answers'] = collect($question['answers'])->map(function($answer) {
+                return [
+                    'id' => $answer['id'],
+                    'answer' => $answer['answer']
+                ];
+            })->toArray();
         }
-
+    
         return response()->json(['data' => $transformedSubject]);
     }
 
-    public function createSubjectWithQuestions(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'subject' => 'required|string|max:255',
+            'questions' => 'required|array|min:1',
             ]);
         $subject = new Subject();
         $subject->subject = $request->input('subject');
         $subject->save();
 
-        $questionsData = $request->input('questions'); // Tableau de questions
-        foreach ($questionsData as $questionData) {
-            $subject->questions()->attach($question->id);
-        }
-
-        return response()->json(['message' => 'Sujet créé avec succès avec les questions associées !']);
+       
+    $questionsData = $request->input('questions'); // Tableau de questions
+    foreach ($questionsData as $question) {
+        $subject->questions()->attach($question["value"]);
+    }
+        redirect(route('subjects.index'));
     }
 
     public function destroy($id)

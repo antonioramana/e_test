@@ -6,6 +6,8 @@ use App\Models\Recruiter;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
+use Inertia\Inertia;
+
 
 class RecruiterController extends Controller
 {
@@ -15,7 +17,10 @@ class RecruiterController extends Controller
     public function index()
     {
         $recruiters = Recruiter::with('user', 'department')->get();
-        return response()->json($recruiters);
+       
+        return Inertia::render('Recruiter/Index', [
+            'recruiters' => $recruiters,
+        ]);
     }
 
     /**

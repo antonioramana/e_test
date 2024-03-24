@@ -18,8 +18,12 @@ class Candidate extends Model
     public function Post(){
         return $this->belongsTo(Post::class, 'post_id');
     }
-    public function candidate_answer()
+    public function candidate_answers()
     {
         return $this->hasMany(Candidate_answer::class);
+    }
+    public function candidate_notes()
+    {
+        return $this->hasMany(CandidateNote::class);
     }
 }

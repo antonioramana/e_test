@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -13,7 +14,10 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('candidates.user')->get();
-        return response()->json($posts);
+       // return response()->json($posts);
+       return Inertia::render('Post/Index', [
+        'posts' => $posts,
+    ]);
     }
 
     /**
@@ -32,17 +36,16 @@ class PostController extends Controller
         $request->validate([
             'name' => 'required|unique:posts|max:255',
             'description' => 'required|max:255',
-            'is_available' => 'required|boolean',
-            'nb_allowed' => 'required|numeric',
+            // 'is_available' => 'required|boolean',
+            // 'nb_allowed' => 'required|numeric',
         ]);
         $post = new Post();
         $post->name = $request->input('name');
         $post->description = $request->input('description');
-        $post->is_available = $request->input('is_available');
-        $post->nb_allowed = $request->input('nb_allowed');
         $post->save();
 
-        return response()->json($post, 201);
+        redirect(route('levels.index'));
+        //return response()->json($post, 201);
     }
 
     /**
