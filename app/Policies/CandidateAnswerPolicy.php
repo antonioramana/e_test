@@ -37,7 +37,7 @@ class CandidateAnswerPolicy
      */
     public function update(User $user, CandidateAnswer $CandidateAnswer): bool
     {
-        //
+        return $user->role === 'admin' || $user->role==='recruiter';
     }
 
     /**

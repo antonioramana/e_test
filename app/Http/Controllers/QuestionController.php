@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Answer;
+use Inertia\Inertia;
 
 class QuestionController extends Controller
 {
     public function index()
     {
         $questions = Question::with('answers')->get();
-        return response()->json($questions);
+       // return response()->json($questions);
+        return Inertia::render('QuestionAnswer/Index', [
+            'questions' => $questions,
+        ]);
     }
 
     /**
@@ -20,7 +24,7 @@ class QuestionController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createQuestion(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'question' => 'required|string|max:255',
@@ -43,7 +47,7 @@ class QuestionController extends Controller
             $answer->save();
         }
 
-        return response()->json(['message' => 'Question créée avec succès !']);
+        redirect(route('questions.index'));
     }
 
     public function show($id)

@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('candidate_answer', function (Blueprint $table) {
             $table->id();
             $table->uuid('interview_id');
+            $table->integer('point')->nullable();
             $table->unsignedBigInteger('candidate_id');
+            $table->text('answer_of_candidate')->nullable();
             $table->unsignedBigInteger('answer_id');
             $table->foreign('interview_id')->references('id')->on('interviews')->onDelete('cascade');
             $table->foreign('candidate_id')->references('id')->on('candidates')->onDelete('cascade');
